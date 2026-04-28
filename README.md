@@ -1,5 +1,7 @@
 # Learn Reverse Proxies
 
+<img src=assets/cover.png>
+
 This project exists to teach **what a reverse proxy does** and **why** people put one in front of an application—using a deliberately small setup you can deploy and poke at.
 
 You are not here to memorize Terraform. You _are_ here to see: one machine faces the internet, another machine runs the app in private, and **NGINX** is the single front door that forwards browser and API traffic to the backend.
@@ -106,5 +108,3 @@ terraform destroy
 This stack uses a **NAT Gateway** so the private instance can bootstrap; it has ongoing cost until you destroy it. See [AWS NAT Gateway pricing](https://aws.amazon.com/vpc/pricing/).
 
 ---
-
-More detail: [PROJECT.md](PROJECT.md) (NGINX snippet, validation, HTTPS / auth ideas).
