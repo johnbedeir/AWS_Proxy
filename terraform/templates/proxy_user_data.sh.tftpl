@@ -1,0 +1,36 @@
+#!/bin/bash
+set -euo pipefail
+exec > >(tee /var/log/proxy-bootstrap.log) 2>&1
+
+dnf install -y nginx
+
+# Drop stock server blocks; nginx must pass `nginx -t` or the unit will not listen on :80.
+rm -f /etc/nginx/conf.d/*.conf /etc/nginx/default.d/*.conf 2>/dev/null || true
+
+cat >/etc/nginx/conf.d/backend_proxy.conf <<'CONF'
+server {
+    listen 80 default_server;
+    server_name _;
+
+    location / {
+        proxy_pass http://${backend_private_ip}:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+CONF
+
+# SELinux: allow nginx to connect to the backend (otherwise 502 even when nginx is up).
+if command -v setsebool >/dev/null 2>&1; then
+  setsebool -P httpd_can_network_connect 1 2>/dev/null || true
+fi
+
+if systemctl is-active --quiet firewalld 2>/dev/null; then
+  firewall-cmd --permanent --add-service=http 2>/dev/null || true
+  firewall-cmd --reload 2>/dev/null || true
+fi
+
+nginx -t
+systemctl enable --now nginx

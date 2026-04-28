@@ -1,0 +1,4 @@
+# Copy to terraform.tfvars and edit.
+# aws_region   = "us-east-1"
+# key_name     = "my-key-pair"   # optional: set to an EXISTING EC2 key pair in this region, or omit for no SSH
+# ssh_cidr     = "203.0.113.10/32"
