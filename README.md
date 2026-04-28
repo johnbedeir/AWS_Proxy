@@ -40,7 +40,6 @@ Optional: SSH into the **proxy** host and inspect `/etc/nginx/conf.d/backend_pro
 
 ```text
 AWS_Proxy/
-├── PROJECT.md                 # Architecture checklist & optional extras
 ├── README.md                  # This guide
 ├── assets/                    # Images for this guide (optional)
 └── terraform/
